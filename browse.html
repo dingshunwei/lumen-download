@@ -17,11 +17,13 @@
     header .ic { background:none; border:none; color:#fff; font-size:19px; cursor:pointer; padding:4px 6px; }
     header .filter { background:rgba(255,255,255,.9); color:#e65100; border:none; padding:6px 12px; border-radius:16px; font-size:14px; font-weight:700; cursor:pointer; }
     .wrap { max-width:760px; margin:0 auto; padding:14px; }
-    .card { background:#fff; border-radius:14px; padding:14px 16px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,.06); display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+    .card { background:#fff; border-radius:14px; padding:12px 14px; margin-bottom:12px; box-shadow:0 1px 3px rgba(0,0,0,.06); display:flex; justify-content:space-between; align-items:center; cursor:pointer; gap:12px; }
     .card h3 { margin:0 0 4px; font-size:17px; }
     .card .meta { font-size:13px; color:#9a9a9a; }
     .card .prev { font-size:13px; color:#666; margin-top:2px; }
     .card .fav { font-size:18px; }
+    .cardthumb { width:66px; height:66px; border-radius:10px; object-fit:cover; background:#eee; flex:none; }
+    .cardbody { flex:1; min-width:0; }
     .blocks img { max-width:100%; border-radius:10px; margin:8px 0; }
     .blocks video { max-width:100%; border-radius:10px; margin:8px 0; }
     .blocks audio { width:100%; margin:6px 0; }
@@ -116,8 +118,15 @@
           const first=(d.blocks||[]).find(function(b){return b.type==='text';});
           const prev=first?String(first.data).slice(0,50):'';
           const dt=(d.created_at||'').slice(0,16).replace('T',' ');
+          // 缩略图：优先图片，其次视频首帧
+          let thumb='';
+          const imgB=(d.blocks||[]).find(function(b){return b.type==='image';});
+          const vidB=(d.blocks||[]).find(function(b){return b.type==='video';});
+          if(imgB) thumb='<img class="cardthumb" src="'+esc(imgB.data)+'">';
+          else if(vidB) thumb='<video class="cardthumb" src="'+esc(vidB.data)+'" preload="metadata" muted playsinline></video>';
+          if(!thumb) thumb='<div class="cardthumb"></div>';
           const c=document.createElement('div'); c.className='card';
-          c.innerHTML='<div><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></div><span class="fav">'+(FAVS.has(d.id)?'&#9829;':'&#9825;')+'</span>';
+          c.innerHTML=''+thumb+'<div class="cardbody"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></div><span class="fav">'+(FAVS.has(d.id)?'&#9829;':'&#9825;')+'</span>';
           c.onclick=function(){ openDiary(d.id); }; el.appendChild(c);
         });
         if(!el.children.length) el.innerHTML='<div class="empty">'+(ONLY_FAV?t('还没有收藏的日记','No favorited diaries yet'):t('还没有日记','No diaries yet'))+'</div>';
