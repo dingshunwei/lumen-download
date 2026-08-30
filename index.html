@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>上海宁波日记 · 下载</title>
+  <title>NIO ES9 · Shanghai Ningbo Diary — Read Online & Download App</title>
+  <meta name="description" content="Shanghai Ningbo Diary — read diaries about NIO ES9, Shanghai, Ningbo and China life. Browse online and download the diary app for Android / Huawei phones.">
+  <meta name="keywords" content="NIO ES9, Shanghai, Ningbo, China, Shanghai diary, Ningbo diary, daily diary, diary app, Android app, Huawei, EV car, 上海宁波日记">
+  <meta property="og:title" content="NIO ES9 · Shanghai Ningbo Diary">
+  <meta property="og:description" content="Read the NIO ES9 diary and more — Shanghai & Ningbo, China. Browse online or download the Android app.">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
     * { box-sizing:border-box; }
@@ -65,7 +69,7 @@
     <div class="section" id="download">
       <h2><span class="zh">下载安装</span><span class="en">Download</span></h2>
       <p class="note"><span class="zh">安卓手机专用。安装后需允许"安装未知来源应用"。</span><span class="en">For Android. Allow "install from unknown sources" when prompted.</span></p>
-      <a class="btn" href="./diary-v1.0.0.apk" download>📥 <span class="zh">下载 App（diary-v1.0.0.apk · 53.7MB）</span><span class="en">Download App (diary-v1.0.0.apk · 53.7MB)</span></a>
+      <a class="btn" href="./diary-v1.0.0.apk" download>📥 <span class="zh">下载客户版（diary-v1.0.0.apk · 53.7MB）</span><span class="en">Download (diary-v1.0.0.apk · 53.7MB)</span></a>
     </div>
 
     <div class="section">
@@ -109,10 +113,9 @@
       lang = (lang==='zh')?'en':'zh';
       document.documentElement.setAttribute('data-lang',lang);
       document.documentElement.setAttribute('lang',lang);
-      localStorage.setItem('lang', lang);
       document.title = lang==='zh' ? '上海宁波日记 · 下载' : 'Shanghai/Ningbo Diary · Download';
     });
-    document.addEventListener('DOMContentLoaded', function(){ var saved=localStorage.getItem('lang'); if(saved){ document.documentElement.setAttribute('data-lang',saved); document.documentElement.setAttribute('lang',saved); document.title = saved==='zh'?'上海宁波日记 · 下载':'Shanghai/Ningbo Diary · Download'; } loadLatest(); });
+    document.addEventListener('DOMContentLoaded', loadLatest);
   </script>
 </body>
 </html>
