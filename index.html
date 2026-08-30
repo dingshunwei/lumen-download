@@ -109,9 +109,10 @@
       lang = (lang==='zh')?'en':'zh';
       document.documentElement.setAttribute('data-lang',lang);
       document.documentElement.setAttribute('lang',lang);
+      localStorage.setItem('lang', lang);
       document.title = lang==='zh' ? '上海宁波日记 · 下载' : 'Shanghai/Ningbo Diary · Download';
     });
-    document.addEventListener('DOMContentLoaded', loadLatest);
+    document.addEventListener('DOMContentLoaded', function(){ var saved=localStorage.getItem('lang'); if(saved){ document.documentElement.setAttribute('data-lang',saved); document.documentElement.setAttribute('lang',saved); document.title = saved==='zh'?'上海宁波日记 · 下载':'Shanghai/Ningbo Diary · Download'; } loadLatest(); });
   </script>
 </body>
 </html>
