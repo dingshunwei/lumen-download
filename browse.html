@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh" data-lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>上海宁波日记 · 在线浏览</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    * { box-sizing:border-box; }
+    body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",Arial,sans-serif; margin:0; background:#fff7ed; color:#1f2933; line-height:1.7; }
+    header { background:linear-gradient(135deg,#ff9800,#f97316); color:#fff; padding:18px 16px; position:sticky; top:0; z-index:10; }
+    header .back { display:inline-block; color:#fff; text-decoration:none; margin-right:10px; font-size:18px; }
+    header .title { font-size:20px; font-weight:700; }
+    header .right { float:right; color:#fff; text-decoration:none; font-size:14px; }
+    .wrap { max-width:780px; margin:0 auto; padding:16px; }
+    .card { background:#fff; border-radius:12px; padding:16px; margin-bottom:12px; box-shadow:0 1px 4px rgba(0,0,0,.06); cursor:pointer; }
+    .card h3 { margin:0 0 6px; font-size:18px; }
+    .card .meta { font-size:13px; color:#8a8a8a; }
+    .blocks img { max-width:100%; border-radius:10px; margin:8px 0; }
+    .blocks video { max-width:100%; border-radius:10px; margin:8px 0; }
+    .blocks p { margin:8px 0; }
+    .blocks .langtag { font-size:12px; background:#fff3e0; color:#e65100; padding:2px 8px; border-radius:6px; margin-left:6px; }
+    .hd-row { display:flex; justify-content:space-between; align-items:center; margin:6px 0; }
+    .favbtn { background:none; border:none; font-size:22px; cursor:pointer; }
+    .cmt { border-top:1px solid #f0e0d0; padding:10px 0; }
+    .cmt .me { color:#e65100; font-size:12px; } 
+    .cmtnone { color:#999; font-size:14px; }
+    .inputrow { display:flex; gap:8px; margin-top:12px; }
+    .inputrow input { flex:1; padding:10px; border:1px solid #e0c8b0; border-radius:8px; font-size:15px; }
+    .inputrow button { padding:10px 16px; background:#f97316; color:#fff; border:none; border-radius:8px; font-size:15px; cursor:pointer; }
+    .btn { display:inline-block; background:#f97316; color:#fff; padding:10px 16px; border-radius:8px; text-decoration:none; font-size:15px; cursor:pointer; border:none; }
+    .del { color:#999; font-size:12px; background:none; border:none; cursor:pointer; }
+    .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#333; color:#fff; padding:10px 16px; border-radius:8px; font-size:14px; opacity:0; transition:opacity .3s; z-index:99; }
+    .msgbox { margin-top:16px; background:#fff; border-radius:12px; padding:16px; }
+    #detail { display:none; }
+    #list { display:block; }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back" id="backBtn" href="./index.html">‹ 主页</a>
+    <a class="title" href="./index.html" style="color:#fff;text-decoration:none;">上海宁波日记</a>
+    <a class="right" href="./index.html">⬇ 下载</a>
+  </header>
+
+  <div class="wrap">
+    <div id="list">
+      <div id="diaryList"></div>
+    </div>
+    <div id="detail"></div>
+    <div class="msgbox" id="msgbox">
+      <strong>📨 给作者留言</strong>
+      <div class="inputrow">
+        <input id="msgText" placeholder="想对作者说点什么…">
+        <button onclick="sendMessage()">发送</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SUPABASE_URL = "https://elrsrrvvuhfbkmxnvtod.supabase.co";
+    const SUPABASE_ANON = "sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    // 匿名设备 ID
+    function deviceId(){
+      let id = localStorage.getItem('diary_dev_id');
+      if(!id){ id = 'web-' + Math.random().toString(36).slice(2) + Date.now().toString(36); localStorage.setItem('diary_dev_id', id); }
+      return id;
+    }
+
+    function toast(t){ const e=document.getElementById('toast'); e.textContent=t; e.style.opacity=1; setTimeout(()=>e.style.opacity=0,1800); }
+    function langText(l){ return {sh:'上海话',nb:'宁波话',en:'英语',zh:'中文'}[l]||''; }
+
+    async function loadDiaries(){
+      const list = document.getElementById('diaryList');
+      list.innerHTML = '<p style="text-align:center;color:#999">加载中…</p>';
+      try{
+        const { data, error } = await sb.from('diaries').select('id,title,created_at').order('created_at',{ascending:false});
+        if(error) throw error;
+        list.innerHTML = '';
+        if(!data || !data.length){ list.innerHTML='<p style="text-align:center;color:#999">还没有日记，等作者发布吧</p>'; return; }
+        data.forEach(d=>{
+          const el = document.createElement('div'); el.className='card';
+          const dt = (d.created_at||'').slice(0,16).replace('T',' ');
+          el.innerHTML = '<h3>'+esc(d.title)+'</h3><div class="meta">'+dt+'</div>';
+          el.onclick = ()=> openDiary(d.id);
+          list.appendChild(el);
+        });
+      }catch(e){ list.innerHTML='<p style="text-align:center;color:#e65100">加载失败：'+esc(e.message)+'</p>'; }
+    }
+
+    function esc(s){ return String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    async function openDiary(id){
+      document.getElementById('list').style.display='none';
+      document.getElementById('msgbox').style.display='none';
+      document.getElementById('detail').style.display='block';
+      var b=document.getElementById('backBtn'); b.onclick=function(e){e.preventDefault(); showList();}; b.textContent='‹ 返回';
+      const d = document.getElementById('detail');
+      d.innerHTML='<p style="text-align:center;color:#999">加载中…</p>';
+      const dev = deviceId();
+      try{
+        const { data, error } = await sb.from('diaries').select('id,title,blocks,created_at,updated_at').eq('id',id).single();
+        if(error) throw error;
+        // 收藏状态
+        let fav=false;
+        try{ const f=await sb.from('favorites').select('id').eq('device_id',dev).eq('diary_id',id); fav = f.data && f.data.length>0; }catch(e){}
+        let html = '<div class="hd-row"><a class="back" href="#" onclick="showList();return false;">‹ 返回</a><button class="favbtn" id="favbtn" onclick="toggleFav('+id+')">'+(fav?'❤️':'🤍')+'</button></div>';
+        html += '<h2 style="margin:0 0 6px">'+esc(data.title)+'</h2><div class="meta">'+(data.created_at||'').slice(0,16).replace('T',' ')+'</div>';
+        html += '<div class="blocks">';
+        (data.blocks||[]).forEach(b=>{
+          if(b.type==='text') html += '<p>'+esc(b.data)+'</p>';
+          else if(b.type==='image') html += '<img src="'+esc(b.data)+'" alt="图片">';
+          else if(b.type==='video') html += '<video controls src="'+esc(b.data)+'"></video>';
+          else if(b.type==='voice'){ const lt=langText(b.lang); html += '<audio controls src="'+esc(b.data)+'"></audio>'+(lt?'<span class="langtag">'+lt+'</span>':''); }
+        });
+        html += '</div><div id="cmts"></div>';
+        html += '<div class="inputrow"><input id="cmtText" placeholder="写评论…"><button onclick="postComment('+id+')">发送</button></div>';
+        d.innerHTML = html;
+        loadComments(id);
+      }catch(e){ d.innerHTML='<p style="text-align:center;color:#e65100">加载失败：'+esc(e.message)+'</p>'; }
+    }
+
+    async function loadComments(id){
+      const box = document.getElementById('cmts');
+      const dev = deviceId();
+      try{
+        const { data } = await sb.from('comments').select('id,text,device_id,is_admin,created_at').eq('diary_id',id).order('created_at',{ascending:true});
+        if(!data || !data.length){ box.innerHTML='<p class="cmtnone">还没有评论</p>'; return; }
+        box.innerHTML = data.map(c=>{
+          const me = c.device_id===dev;
+          const admin = c.is_admin;
+          const tag = admin?'<span style="color:#e65100;font-size:12px;font-weight:700">作者</span> ':(me?'<span class="me">我</span> ':'');
+          const del = me || admin ? '<button class="del" onclick="deleteComment('+id+','+c.id+')">删除</button>':'' ;
+          return '<div class="cmt">'+tag+esc(c.text||'')+' <span style="color:#bbb;font-size:12px">'+(c.created_at||'').slice(0,16).replace('T',' ')+'</span> '+del+'</div>';
+        }).join('');
+      }catch(e){ box.innerHTML=''; }
+    }
+
+    async function postComment(id){
+      const t = document.getElementById('cmtText').value.trim();
+      if(!t) return;
+      const dev = deviceId();
+      try{
+        await sb.from('comments').insert({diary_id:id, type:'text', text:t, device_id:dev, is_admin:false});
+        document.getElementById('cmtText').value='';
+        toast('已发表评论');
+        loadComments(id);
+      }catch(e){ toast('评论失败：'+e.message); }
+    }
+
+    async function deleteComment(diaryId, cid){
+      const dev = deviceId();
+      try{ await sb.from('comments').delete().eq('id',cid).eq('device_id',dev); loadComments(diaryId); toast('已删除'); }catch(e){ toast('删除失败：'+e.message); }
+    }
+
+    async function toggleFav(id){
+      const dev = deviceId();
+      try{
+        const { data } = await sb.from('favorites').select('id').eq('device_id',dev).eq('diary_id',id);
+        if(data && data.length){ await sb.from('favorites').delete().eq('device_id',dev).eq('diary_id',id); }
+        else { await sb.from('favorites').insert({device_id:dev, diary_id:id}); }
+        const btn = document.getElementById('favbtn');
+        const now = btn.textContent==='❤️';
+        btn.textContent = now?'🤍':'❤️';
+        toast(now?'已取消收藏':'已收藏');
+      }catch(e){ toast('收藏失败：'+e.message); }
+    }
+
+    async function sendMessage(){
+      const t = document.getElementById('msgText').value.trim();
+      if(!t) return;
+      const dev = deviceId();
+      try{ await sb.from('messages').insert({device_id:dev, text:t}); document.getElementById('msgText').value=''; toast('已发送给作者'); }catch(e){ toast('发送失败：'+e.message); }
+    }
+
+    function showList(){
+      document.getElementById('detail').style.display='none';
+      document.getElementById('msgbox').style.display='block';
+      document.getElementById('list').style.display='block';
+      var b=document.getElementById('backBtn'); b.onclick=function(e){e.preventDefault(); location.href='./index.html';}; b.textContent='‹ 主页';
+      loadDiaries();
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      const id = new URLSearchParams(location.search).get('d');
+      if(id){ openDiary(parseInt(id)); } else { loadDiaries(); }
+    });
+  </script>
+</body>
+</html>
