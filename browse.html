@@ -64,12 +64,12 @@
   </header>
 
   <div class="wrap">
-    <div id="list"><div class="empty">加载中…</div></div>
+    <div id="list"><div class="empty">加载中...</div></div>
     <div id="detail" style="display:none"></div>
     <div class="msgbox" id="msgbox">
       <strong id="msglabel">📨 给作者留言</strong>
       <div class="inputbar">
-        <input id="msgText" placeholder="想对作者说点什么…">
+        <input id="msgText" placeholder="想对作者说点什么...">
         <button class="send" id="msgsend" onclick="sendMessage()">发送</button>
       </div>
     </div>
@@ -91,9 +91,9 @@
       document.documentElement.setAttribute('data-lang',LANG);
       document.getElementById('headerTitle').textContent = t('拾光日记','Sunlight Diary');
       var ml=document.getElementById('msglabel'); if(ml) ml.textContent = t('📨 给作者留言','📨 Message the author');
-      var mi=document.getElementById('msgText'); if(mi) mi.placeholder = t('想对作者说点什么…','What would you like to tell the author…');
+      var mi=document.getElementById('msgText'); if(mi) mi.placeholder = t('想对作者说点什么...','What would you like to tell the author...');
       var ms=document.getElementById('msgsend'); if(ms) ms.textContent = t('发送','Send');
-      var ci=document.getElementById('cmtText'); if(ci) ci.placeholder = t('写评论…','Write a comment…');
+      var ci=document.getElementById('cmtText'); if(ci) ci.placeholder = t('写评论...','Write a comment...');
       setFilter();
     }
     function toggleLang(){ LANG = LANG==='zh'?'en':'zh'; localStorage.setItem('lang',LANG); applyLang(); loadDiaries(); }
@@ -106,7 +106,7 @@
     async function loadFavs(){ try{ const {data}=await sb.from('favorites').select('diary_id').eq('device_id',DEV); FAVS=new Set((data||[]).map(x=>x.diary_id)); }catch(e){} }
 
     async function loadDiaries(){
-      const el=document.getElementById('list'); el.innerHTML='<div class="empty">加载中…</div>';
+      const el=document.getElementById('list'); el.innerHTML='<div class="empty">加载中...</div>';
       try{
         const {data}=await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false});
         if(!data||!data.length){ el.innerHTML='<div class="empty">'+t('还没有日记，等作者发布吧','No diaries yet.')+'</div>'; return; }
@@ -130,7 +130,7 @@
       document.getElementById('list').style.display='none';
       document.getElementById('detail').style.display='block';
       document.getElementById('backWrap').style.display='inline-block';
-      const d=document.getElementById('detail'); d.innerHTML='<div class="empty">加载中…</div>';
+      const d=document.getElementById('detail'); d.innerHTML='<div class="empty">加载中...</div>';
       try{
         const {data,error}=await sb.from('diaries').select('id,title,blocks,created_at').eq('id',id).single();
         if(error) throw error;
@@ -145,7 +145,7 @@
           else if(b.type==='voice'){ const lt=langText(b.lang); h+='<audio controls src="'+esc(b.data)+'"></audio>'+(lt?'<span class="langtag">'+lt+'</span>':''); }
         });
         h+='</div><div id="cmts"></div>';
-        h+='<div class="inputbar"><input id="cmtText" placeholder="'+t('写评论…','Write a comment…')+'"><button class="mic" id="micbtn" onclick="toggleRecord('+id+')'>🎤</button><button class="send" onclick="postComment('+id+')">'+t('发送','Send')+'</button></div>';
+        h+='<div class="inputbar"><input id="cmtText" placeholder="'+t('写评论...','Write a comment...')+'"><button class="mic" id="micbtn" onclick="toggleRecord('+id+')'>🎤</button><button class="send" onclick="postComment('+id+')">'+t('发送','Send')+'</button></div>';
         d.innerHTML=h; loadComments(id);
       }catch(e){ d.innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'; }
     }
@@ -199,7 +199,7 @@
           RECORDER.onstop=async()=>{
             stream.getTracks().forEach(t=>t.stop());
             if(!REC_BITS.length){ toast('录音太短'); return; }
-            toast('上传语音中…');
+            toast('上传语音中...');
             const blob=new Blob(REC_BITS,{type:RECORDER.mimeType||'audio/webm'});
             const ext=(RECORDER.mimeType||'').includes('ogg')?'ogg':'webm';
             const path='audio/'+Date.now()+'_'+Math.random().toString(36).slice(2,6)+'.'+ext;
@@ -211,7 +211,7 @@
             }catch(e){ toast('语音上传失败：'+e.message); }
           };
           RECORDER.start();
-          RECORDING=true; btn.textContent='🔴'; toast('开始录音…');
+          RECORDING=true; btn.textContent='🔴'; toast('开始录音...');
         }catch(e){ toast('无法录音：请授权麦克风'); }
       }else{
         RECORDER.stop(); RECORDING=false; btn.textContent='🎤';
