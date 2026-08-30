@@ -57,7 +57,7 @@
     </div>
     <div class="right">
       <button class="iconbtn" title="主页" onclick="location.href='./index.html'">🏠</button>
-      <button class="filter" id="filterBtn">全部</button>
+      <button class="filter" id="filterBtn">只看收藏</button>
       <button class="iconbtn" title="发消息给作者" onclick="goMessage()">✉️</button>
     </div>
   </header>
@@ -111,7 +111,7 @@
       }catch(e){ el.innerHTML='<div class="empty">加载失败：'+esc(e.message)+'</div>'; }
     }
 
-    function setFilter(t){ const b=document.getElementById('filterBtn'); b.textContent=t; b.style.background = t==='只看收藏' ? '#e65100':'rgba(255,255,255,.9)'; b.style.color = t==='只看收藏' ? '#fff':'#e65100'; }
+    function setFilter(){ const b=document.getElementById('filterBtn'); b.textContent = ONLY_FAV ? '全部' : '只看收藏'; b.style.background = ONLY_FAV ? '#e65100' : 'rgba(255,255,255,.9)'; b.style.color = ONLY_FAV ? '#fff' : '#e65100'; }
 
     async function openDiary(id){
       document.getElementById('list').style.display='none';
@@ -223,7 +223,7 @@
       loadDiaries();
     }
 
-    document.getElementById('filterBtn').addEventListener('click',function(){ ONLY_FAV=!ONLY_FAV; setFilter(ONLY_FAV?'只看收藏':'全部'); loadDiaries(); });
+    document.getElementById('filterBtn').addEventListener('click',function(){ ONLY_FAV=!ONLY_FAV; setFilter(); loadDiaries(); });
 
     document.addEventListener('DOMContentLoaded', async ()=>{
       await loadFavs();
