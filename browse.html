@@ -139,7 +139,7 @@
           if(b.type==='text') h+='<p>'+esc(b.data)+'</p>';
           else if(b.type==='image') h+='<img src="'+esc(b.data)+'" alt="img">';
           else if(b.type==='video') h+='<video controls src="'+esc(b.data)+'"></video>';
-          else if(b.type==='voice'){ const lt=langText(b.lang); h+='<audio controls controlsList="nodownload" src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></audio>'+(lt?'<span class="langtag">'+lt+'</span>':''); }
+          else if(b.type==='voice'){ const lt=langText(b.lang); h+=(lt?'<span class="langtag">'+lt+'</span>':'')+'<audio controls controlsList="nodownload" src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></audio>'; }
         });
         h+='</div><div id="cmts"></div>';
         h+='<div class="inputbar"><input id="cmtText" placeholder="'+t('写评论...','Write a comment...')+'"><button class="mic" id="micbtn" onclick="toggleRecord('+id+')">&#127908;</button><button class="send" onclick="postComment('+id+')">'+t('发送','Send')+'</button></div>';
