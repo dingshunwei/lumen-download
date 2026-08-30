@@ -99,6 +99,7 @@
     function toast(m){ const e=document.getElementById('toast'); e.textContent=m; e.style.opacity=1; setTimeout(function(){e.style.opacity=0;},1800); }
     function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
     function langText(l){ return {sh:t('上海话','Shanghainese'),nb:t('宁波话','Ningbo'),en:t('英语','English'),zh:t('中文','Mandarin')}[l]||''; }
+    function pauseOtherAudio(el){ document.querySelectorAll('audio').forEach(function(a){ if(a!==el && !a.paused) a.pause(); }); }
 
     function setFilter(){ const b=document.getElementById('filterBtn'); b.textContent = ONLY_FAV ? t('全部','All') : t('只看收藏','Favorites only'); }
 
@@ -138,7 +139,7 @@
           if(b.type==='text') h+='<p>'+esc(b.data)+'</p>';
           else if(b.type==='image') h+='<img src="'+esc(b.data)+'" alt="img">';
           else if(b.type==='video') h+='<video controls src="'+esc(b.data)+'"></video>';
-          else if(b.type==='voice'){ const lt=langText(b.lang); h+='<audio controls src="'+esc(b.data)+'"></audio>'+(lt?'<span class="langtag">'+lt+'</span>':''); }
+          else if(b.type==='voice'){ const lt=langText(b.lang); h+='<audio controls controlsList="nodownload" src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></audio>'+(lt?'<span class="langtag">'+lt+'</span>':''); }
         });
         h+='</div><div id="cmts"></div>';
         h+='<div class="inputbar"><input id="cmtText" placeholder="'+t('写评论...','Write a comment...')+'"><button class="mic" id="micbtn" onclick="toggleRecord('+id+')">&#127908;</button><button class="send" onclick="postComment('+id+')">'+t('发送','Send')+'</button></div>';
@@ -156,7 +157,7 @@
           const tag=admin?'<span class="author">'+t('作者','Author')+'</span>':(me?'<span class="me">'+t('我','Me')+'</span>':'');
           const del=(me||admin)?' <button class="del" onclick="delComment('+id+','+c.id+')">'+t('删除','Delete')+'</button>':'';
           let body='';
-          if(c.type==='voice'&&c.audio) body='<audio controls src="'+esc(c.audio)+'"></audio>';
+          if(c.type==='voice'&&c.audio) body='<audio controls controlsList="nodownload" src="'+esc(c.audio)+'" onplay="pauseOtherAudio(this)"></audio>';
           else body=esc(c.text||'');
           return '<div class="cmt">'+tag+body+'<div style="font-size:12px;color:#bbb">'+String(c.created_at||'').slice(0,16).replace('T',' ')+'</div>'+del+'</div>';
         }).join('');
