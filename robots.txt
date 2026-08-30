@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dingshunwei.github.io/lumen-download/sitemap.xml
