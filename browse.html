@@ -124,7 +124,6 @@
           const vidB=(d.blocks||[]).find(function(b){return b.type==='video';});
           if(imgB) thumb='<img class="cardthumb" src="'+esc(imgB.data)+'">';
           else if(vidB) thumb='<video class="cardthumb" src="'+esc(vidB.data)+'" preload="metadata" muted playsinline></video>';
-          if(!thumb) thumb='<div class="cardthumb"></div>';
           const c=document.createElement('div'); c.className='card';
           c.innerHTML=''+thumb+'<div class="cardbody"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></div><span class="fav">'+(FAVS.has(d.id)?'&#9829;':'&#9825;')+'</span>';
           c.onclick=function(){ openDiary(d.id); }; el.appendChild(c);
