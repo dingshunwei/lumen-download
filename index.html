@@ -46,4 +46,70 @@
     .card { display:block; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px; text-decoration:none; color:inherit; transition:transform .2s,box-shadow .2s,border-color .2s; }
     .card:hover { transform:translateY(-2px); box-shadow:var(--shadow); border-color:#ffc7a1; }
     .card h3 { margin:0 0 5px; font-size:17px; font-weight:700; }
-    .card .meta { font-size:13px; color:var(--ink-faint);
+    .card .meta { font-size:13px; color:var(--ink-faint); }
+    .card .prev { font-size:14px; color:var(--ink-soft); margin-top:2px; line-height:1.7; }
+
+    /* buttons */
+    .btn { display:block; text-align:center; background:var(--brand); color:#fff; text-decoration:none; padding:14px 20px; border-radius:12px; font-size:17px; font-weight:600; margin:12px 0; transition:background .2s,transform .2s; }
+    .btn:hover { background:var(--brand-deep); transform:translateY(-1px); }
+    .btn.secondary { background:var(--card); color:var(--brand); border:2px solid var(--brand); }
+
+    /* screenshots */
+    .shots { display:flex; gap:10px; overflow-x:auto; padding:6px 0; }
+    .shots img { height:400px; border-radius:12px; border:1px solid var(--line); }
+
+    .note { font-size:13px; color:var(--ink-faint); }
+    .empty { color:var(--ink-faint); text-align:center; padding:24px 0; }
+
+    /* language toggle */
+    html[data-lang="en"] .zh { display:none !important; }
+    html[data-lang="zh"] .en { display:none !important; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span class="brand"><span class="zh">上海宁波日记</span><span class="en">Shanghai/Ningbo Diary</span></span>
+    <button class="langbtn" id="langbtn">🌐 <span class="zh">English</span><span class="en">中文</span></button>
+  </div>
+
+  <div class="hero">
+    <div class="logo">📔</div>
+    <h1><span class="zh">上海宁波日记</span><span class="en">Shanghai/Ningbo Diary</span></h1>
+    <div class="sub"><span class="zh">记录上海与宁波的每一寸时光</span><span class="en">Keep every moment of Shanghai &amp; Ningbo</span></div>
+    <a class="cta" href="./browse.html">📖 <span class="zh">开始浏览日记</span><span class="en">Start browsing</span></a>
+    <a class="cta g" href="#download">⬇ <span class="zh">下载 App</span><span class="en">Download App</span></a>
+  </div>
+
+  <div class="wrap">
+    <div class="section">
+      <h2><span class="zh">最新日记</span><span class="en">Latest diaries</span></h2>
+      <div id="latest"><p class="empty">加载中…</p></div>
+      <a class="btn secondary" href="./browse.html" style="margin-top:6px;">👉 <span class="zh">查看全部日记</span><span class="en">View all diaries</span></a>
+    </div>
+
+    <div class="section">
+      <h2><span class="zh">这是什么</span><span class="en">What is it</span></h2>
+      <p><span class="zh">一本温暖、简洁的日记 App —— 看日记、写评论、收藏，还能听上海话 / 宁波话方言语音。</span><span class="en">A warm, simple diary app — read diaries, comment, favorite, and listen to Shanghai / Ningbo dialect voice notes.</span></p>
+    </div>
+
+    <div class="section" id="download">
+      <h2><span class="zh">下载安装</span><span class="en">Download</span></h2>
+      <p class="note"><span class="zh">安卓手机专用。安装后需允许"安装未知来源应用"。</span><span class="en">For Android. Allow "install from unknown sources" when prompted.</span></p>
+      <a class="btn" href="./diary-v1.0.0.apk" download>📥 <span class="zh">下载 App（diary-v1.0.0.apk · 53.7MB）</span><span class="en">Download App (diary-v1.0.0.apk · 53.7MB)</span></a>
+    </div>
+
+    <div class="section">
+      <h2><span class="zh">应用截图</span><span class="en">Screenshots</span></h2>
+      <div class="shots">
+        <img src="./shot_home.png" alt="Home">
+        <img src="./shot_detail2.png" alt="Diary & comments">
+        <img src="./shot_message.png" alt="Message">
+      </div>
+    </div>
+
+    <p class="note" style="text-align:center; margin-top:8px;"><span class="zh">上海宁波日记 · v1.0.0</span><span class="en">Shanghai/Ningbo Diary · v1.0.0</span></p>
+  </div>
+
+  <script>
+    const SUPABASE_U
+...(truncated)...
