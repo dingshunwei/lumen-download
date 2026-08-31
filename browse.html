@@ -165,7 +165,7 @@
         (data.blocks||[]).forEach(function(b){
           if(b.type==='text') h+='<p>'+esc(b.data)+'</p>';
           else if(b.type==='image') h+='<img src="'+esc(b.data)+'" alt="img">';
-          else if(b.type==='video') h+='<video controls src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></video>';
+          else if(b.type==='video') h+='<video controls controlsList="nodownload" oncontextmenu="return false" src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></video>';
           else if(b.type==='voice'){ const lt=langText(b.lang); h+=(lt?'<span class="langtag">'+lt+'</span>':'')+'<audio controls controlsList="nodownload" src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></audio>'; }
         });
         h+='</div><div id="cmts"></div>';
