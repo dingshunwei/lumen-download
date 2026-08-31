@@ -10,107 +10,40 @@
   <meta property="og:description" content="Read the NIO ES9 diary and more — Shanghai & Ningbo, China. Browse online or download the Android app.">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
-    * { box-sizing:border-box; }
-    body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",Arial,sans-serif; margin:0; padding:0; background:#fff7ed; color:#1f2933; line-height:1.7; }
-    .topbar { background:#fff; border-bottom:1px solid #f1e2d0; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:10; }
-    .topbar .brand { font-weight:700; color:#f97316; }
-    .langbtn { background:#f97316; color:#fff; border:none; padding:7px 14px; border-radius:8px; cursor:pointer; font-size:14px; }
-    .hero { background:linear-gradient(135deg,#ff9800,#fb923c,#f97316); color:#fff; text-align:center; padding:50px 20px 40px; }
-    .hero .logo { font-size:52px; }
-    .hero h1 { margin:8px 0 6px; font-size:30px; }
-    .hero .sub { font-size:16px; opacity:.95; margin-bottom:22px; }
-    .hero .cta { display:inline-block; background:#fff; color:#f97316; text-decoration:none; padding:14px 28px; border-radius:30px; font-size:18px; font-weight:700; }
-    .hero .cta.g { margin-left:10px; background:rgba(255,255,255,.18); color:#fff; }
-    .wrap { max-width:860px; margin:0 auto; padding:24px 18px 60px; }
-    .section { background:#fff; border-radius:14px; padding:22px 20px; margin-bottom:20px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
-    .section h2 { font-size:20px; margin:0 0 12px; color:#0f172a; }
-    .card { background:#fff; border:1px solid #f0e0d0; border-radius:12px; padding:14px 16px; margin-bottom:12px; text-decoration:none; color:inherit; display:block; }
-    .card:hover { border-color:#f97316; }
-    .card h3 { margin:0 0 4px; font-size:17px; }
-    .card .meta { font-size:13px; color:#8a8a8a; }
-    .card .prev { font-size:14px; color:#555; margin-top:2px; }
-    .btn { display:block; text-align:center; background:#f97316; color:#fff; text-decoration:none; padding:15px 20px; border-radius:12px; font-size:18px; font-weight:600; margin:12px 0; }
-    .btn:hover{ background:#ea580c; }
-    .btn.secondary { background:#fff; color:#f97316; border:2px solid #f97316; }
-    .shots { display:flex; gap:10px; overflow-x:auto; padding:6px 0; }
-    .shots img { height:400px; border-radius:12px; border:1px solid #eee; }
-    .note { font-size:13px; color:#64748b; }
-    .empty { color:#999; text-align:center; padding:20px 0; }
-    html[data-lang="en"] .zh { display:none !important; }
-    html[data-lang="zh"] .en { display:none !important; }
-  </style>
-</head>
-<body>
-  <div class="topbar">
-    <span class="brand"><span class="zh">上海宁波日记</span><span class="en">Shanghai/Ningbo Diary</span></span>
-    <button class="langbtn" id="langbtn">🌐 <span class="zh">English</span><span class="en">中文</span></button>
-  </div>
-
-  <div class="hero">
-    <div class="logo">📔</div>
-    <h1><span class="zh">上海宁波日记</span><span class="en">Shanghai/Ningbo Diary</span></h1>
-    <div class="sub"><span class="zh">记录上海与宁波的每一寸时光</span><span class="en">Keep every moment of Shanghai &amp; Ningbo</span></div>
-    <a class="cta" href="./browse.html">📖 <span class="zh">开始浏览日记</span><span class="en">Start browsing</span></a>
-    <a class="cta g" href="#download">⬇ <span class="zh">下载 App</span><span class="en">Download App</span></a>
-  </div>
-
-  <div class="wrap">
-    <div class="section">
-      <h2><span class="zh">最新日记</span><span class="en">Latest diaries</span></h2>
-      <div id="latest"><p class="empty">加载中…</p></div>
-      <a class="btn secondary" href="./browse.html" style="margin-top:6px;">👉 <span class="zh">查看全部日记</span><span class="en">View all diaries</span></a>
-    </div>
-
-    <div class="section">
-      <h2><span class="zh">这是什么</span><span class="en">What is it</span></h2>
-      <p><span class="zh">一本温暖、简洁的日记 App —— 看日记、写评论、收藏，还能听上海话 / 宁波话方言语音。</span><span class="en">A warm, simple diary app — read diaries, comment, favorite, and listen to Shanghai / Ningbo dialect voice notes.</span></p>
-    </div>
-
-    <div class="section" id="download">
-      <h2><span class="zh">下载安装</span><span class="en">Download</span></h2>
-      <p class="note"><span class="zh">安卓手机专用。安装后需允许"安装未知来源应用"。</span><span class="en">For Android. Allow "install from unknown sources" when prompted.</span></p>
-      <a class="btn" href="./diary-v1.0.0.apk" download>📥 <span class="zh">下载 App（diary-v1.0.0.apk · 53.7MB）</span><span class="en">Download App (diary-v1.0.0.apk · 53.7MB)</span></a>
-    </div>
-
-    <div class="section">
-      <h2><span class="zh">应用截图</span><span class="en">Screenshots</span></h2>
-      <div class="shots">
-        <img src="./shot_home.png" alt="Home">
-        <img src="./shot_detail2.png" alt="Diary & comments">
-        <img src="./shot_message.png" alt="Message">
-      </div>
-    </div>
-
-    <p class="note" style="text-align:center; margin-top:8px;"><span class="zh">上海宁波日记 · v1.0.0</span><span class="en">Shanghai/Ningbo Diary · v1.0.0</span></p>
-  </div>
-
-  <script>
-    const SUPABASE_URL = "https://elrsrrvvuhfbkmxnvtod.supabase.co";
-    const SUPABASE_ANON = "sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";
-    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-    function esc(s){ return String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
-    async function loadLatest(){
-      const el = document.getElementById('latest');
-      try{
-        const { data } = await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false}).limit(3);
-        if(!data || !data.length){ el.innerHTML='<p class="empty">还没有日记，等作者发布吧</p>'; return; }
-        el.innerHTML = data.map(d=>{
-          const first = (d.blocks||[]).find(b=>b.type==='text');
-          const prev = first ? first.data.slice(0,60) : '';
-          const dt = (d.created_at||'').slice(0,16).replace('T',' ');
-          return '<a class="card" href="./browse.html?d='+d.id+'"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></a>';
-        }).join('');
-      }catch(e){ el.innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'; }
+    :root{
+      --brand:#ff6a1a; --brand-deep:#f25c08; --brand-soft:#ffe9d9;
+      --bg:#faf6f0; --card:#fff; --ink:#241a12; --ink-soft:#6b6055; --ink-faint:#a79c8e;
+      --line:#efe3d5; --line-2:#f6eee1; --radius:16px;
+      --shadow:0 8px 22px rgba(130,72,20,.08);
     }
-    var btn = document.getElementById('langbtn');
-    btn.addEventListener('click', function(){
-      var lang = document.documentElement.getAttribute('data-lang');
-      lang = (lang==='zh')?'en':'zh';
-      document.documentElement.setAttribute('data-lang',lang);
-      document.documentElement.setAttribute('lang',lang);
-      document.title = lang==='zh' ? '上海宁波日记 · 下载' : 'Shanghai/Ningbo Diary · Download';
-    });
-    document.addEventListener('DOMContentLoaded', loadLatest);
-  </script>
-</body>
-</html>
+    * { box-sizing:border-box; }
+    body { font-family:-apple-system,"PingFang SC","Microsoft YaHei",Arial,sans-serif; margin:0; padding:0; background:var(--bg); color:var(--ink); line-height:1.7; -webkit-font-smoothing:antialiased; }
+
+    /* topbar */
+    .topbar { background:rgba(250,246,240,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-2); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:10; }
+    .topbar .brand { font-weight:700; font-size:17px; color:var(--ink); letter-spacing:.5px; }
+    .langbtn { background:var(--brand); color:#fff; border:none; padding:8px 16px; border-radius:999px; cursor:pointer; font-size:13.5px; font-weight:600; transition:transform .2s,background .2s; }
+    .langbtn:hover { background:var(--brand-deep); transform:translateY(-1px); }
+
+    /* hero */
+    .hero { position:relative; overflow:hidden; background:linear-gradient(135deg,#ff8a3d,var(--brand) 45%,var(--brand-deep)); color:#fff; text-align:center; padding:58px 20px 50px; }
+    .hero::before { content:""; position:absolute; width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,.12); top:-120px; left:-90px; }
+    .hero::after { content:""; position:absolute; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,.09); bottom:-110px; right:-70px; }
+    .hero .logo { position:relative; z-index:2; font-size:40px; display:inline-grid; place-items:center; width:76px; height:76px; border-radius:20px; background:#fff; box-shadow:0 14px 30px rgba(120,50,4,.28); }
+    .hero h1 { position:relative; z-index:2; margin:18px 0 8px; font-size:clamp(27px,5.4vw,38px); font-weight:800; letter-spacing:1px; }
+    .hero .sub { position:relative; z-index:2; font-size:15px; opacity:.94; margin-bottom:24px; }
+    .hero .cta { position:relative; z-index:2; display:inline-block; background:#fff; color:var(--brand); text-decoration:none; padding:13px 26px; border-radius:999px; font-size:15px; font-weight:700; box-shadow:0 10px 22px rgba(120,50,4,.22); transition:transform .2s; }
+    .hero .cta:hover { transform:translateY(-2px); }
+    .hero .cta.g { margin-left:10px; background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.5); box-shadow:none; }
+    .hero .cta.g:hover { background:rgba(255,255,255,.28); }
+
+    /* wrap & sections */
+    .wrap { max-width:860px; margin:0 auto; padding:26px 18px 60px; }
+    .section { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+    .section h2 { font-size:20px; margin:0 0 14px; color:var(--ink); font-weight:800; letter-spacing:.3px; }
+
+    /* cards */
+    .card { display:block; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px; text-decoration:none; color:inherit; transition:transform .2s,box-shadow .2s,border-color .2s; }
+    .card:hover { transform:translateY(-2px); box-shadow:var(--shadow); border-color:#ffc7a1; }
+    .card h3 { margin:0 0 5px; font-size:17px; font-weight:700; }
+    .card .meta { font-size:13px; color:var(--ink-faint);
