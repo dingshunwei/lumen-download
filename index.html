@@ -111,5 +111,32 @@
   </div>
 
   <script>
-    const SUPABASE_U
-...(truncated)...
+    const SUPABASE_URL = "https://elrsrrvvuhfbkmxnvtod.supabase.co";
+    const SUPABASE_ANON = "sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    function esc(s){ return String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    async function loadLatest(){
+      const el = document.getElementById('latest');
+      try{
+        const { data } = await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false}).limit(3);
+        if(!data || !data.length){ el.innerHTML='<p class="empty">还没有日记，等作者发布吧</p>'; return; }
+        el.innerHTML = data.map(d=>{
+          const first = (d.blocks||[]).find(b=>b.type==='text');
+          const prev = first ? first.data.slice(0,60) : '';
+          const dt = (d.created_at||'').slice(0,16).replace('T',' ');
+          return '<a class="card" href="./browse.html?d='+d.id+'"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></a>';
+        }).join('');
+      }catch(e){ el.innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'; }
+    }
+    var btn = document.getElementById('langbtn');
+    btn.addEventListener('click', function(){
+      var lang = document.documentElement.getAttribute('data-lang');
+      lang = (lang==='zh')?'en':'zh';
+      document.documentElement.setAttribute('data-lang',lang);
+      document.documentElement.setAttribute('lang',lang);
+      document.title = lang==='zh' ? '上海宁波日记 · 下载' : 'Shanghai/Ningbo Diary · Download';
+    });
+    document.addEventListener('DOMContentLoaded', loadLatest);
+  </script>
+</body>
+</html>
