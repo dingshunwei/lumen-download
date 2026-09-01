@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diarios de Shanghai y Ningbo · NIO ES9 y móviles chinos | Shanghai/Ningbo Diary (Español)</title>
+  <meta name="description" content="Diarios de Shanghai y Ningbo: coches eléctricos (NIO ES9) y móviles chinos (Huawei, Xiaomi) — lee en línea o descarga la app. Shanghai &amp; Ningbo Diary en español.">
+  <meta name="keywords" content="diario, Shanghai, Ningbo, NIO ES9, coches chinos, móviles chinos, Huawei, Xiaomi">
+  <link rel="canonical" href="https://sldiary.com/es/">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    :root{
+      --brand:#ff6a1a; --brand-deep:#f25c08; --brand-soft:#ffe9d9;
+      --bg:#faf6f0; --card:#fff; --ink:#241a12; --ink-soft:#6b6055; --ink-faint:#a79c8e;
+      --line:#efe3d5; --line-2:#f6eee1; --radius:16px;
+      --shadow:0 8px 22px rgba(130,72,20,.08);
+    }
+    * { box-sizing:border-box; }
+    body { font-family:-apple-system,"Segoe UI",Tahoma,"PingFang SC","Microsoft YaHei",Arial,sans-serif; margin:0; padding:0; background:var(--bg); color:var(--ink); line-height:1.7; -webkit-font-smoothing:antialiased; }
+    .topbar { background:rgba(250,246,240,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-2); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:10; }
+    .topbar .brand { font-weight:700; font-size:17px; color:var(--ink); letter-spacing:.5px; flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .langbtn { background:var(--brand); color:#fff; border:none; padding:8px 16px; border-radius:999px; cursor:pointer; font-size:13.5px; font-weight:600; transition:transform .2s,background .2s; min-width:130px; text-align:center; white-space:nowrap; flex:none; }
+    .langbtn:hover { background:var(--brand-deep); transform:translateY(-1px); }
+    .hero { position:relative; overflow:hidden; background:linear-gradient(135deg,#ff8a3d,var(--brand) 45%,var(--brand-deep)); color:#fff; text-align:center; padding:58px 20px 50px; }
+    .hero::before { content:""; position:absolute; width:280px; height:280px; border-radius:50%; background:rgba(255,255,255,.12); top:-120px; left:-90px; }
+    .hero::after { content:""; position:absolute; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,.09); bottom:-110px; right:-70px; }
+    .hero .logo { position:relative; z-index:2; font-size:40px; display:inline-grid; place-items:center; width:76px; height:76px; border-radius:20px; background:#fff; box-shadow:0 14px 30px rgba(120,50,4,.28); }
+    .hero h1 { position:relative; z-index:2; margin:18px 0 8px; font-size:clamp(27px,5.4vw,38px); font-weight:800; letter-spacing:1px; }
+    .hero .sub { position:relative; z-index:2; font-size:15px; opacity:.94; margin-bottom:24px; }
+    .hero .cta { position:relative; z-index:2; display:inline-block; background:#fff; color:var(--brand); text-decoration:none; padding:13px 26px; border-radius:999px; font-size:15px; font-weight:700; box-shadow:0 10px 22px rgba(120,50,4,.22); transition:transform .2s; }
+    .hero .cta:hover { transform:translateY(-2px); }
+    .hero .cta.g { margin-left:10px; background:rgba(255,255,255,.16); color:#fff; border:1px solid rgba(255,255,255,.5); box-shadow:none; }
+    .hero .cta.g:hover { background:rgba(255,255,255,.28); }
+    .wrap { max-width:860px; margin:0 auto; padding:26px 18px 60px; }
+    .section { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:24px 22px; margin-bottom:18px; box-shadow:var(--shadow); }
+    .section h2 { font-size:20px; margin:0 0 14px; color:var(--ink); font-weight:800; letter-spacing:.3px; }
+    .card { display:block; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:16px 18px; margin-bottom:12px; text-decoration:none; color:inherit; transition:transform .2s,box-shadow .2s,border-color .2s; }
+    .card:hover { transform:translateY(-2px); box-shadow:var(--shadow); border-color:#ffc7a1; }
+    .card h3 { margin:0 0 5px; font-size:17px; font-weight:700; }
+    .card .meta { font-size:13px; color:var(--ink-faint); }
+    .card .prev { font-size:14px; color:var(--ink-soft); margin-top:2px; line-height:1.7; white-space:pre-line; }
+    .btn { display:block; text-align:center; background:var(--brand); color:#fff; text-decoration:none; padding:14px 20px; border-radius:12px; font-size:17px; font-weight:600; margin:12px 0; transition:background .2s,transform .2s; }
+    .btn:hover { background:var(--brand-deep); transform:translateY(-1px); }
+    .btn.secondary { background:var(--card); color:var(--brand); border:2px solid var(--brand); }
+    .btnrow { display:flex; gap:12px; margin:12px 0; }
+    .btnrow .btn { flex:1; margin:0; }
+    .shots { display:flex; gap:10px; overflow-x:auto; padding:6px 0; }
+    .shots img { height:480px; width:240px; object-fit:cover; border-radius:12px; border:1px solid var(--line); }
+    .note { font-size:13px; color:var(--ink-faint); }
+    .empty { color:var(--ink-faint); text-align:center; padding:24px 0; }
+  </style>
+</head>
+<body>
+  <div class="topbar">
+    <span class="brand">Diarios de Shanghai y Ningbo</span>
+  </div>
+
+  <div class="hero">
+    <div class="logo">📔</div>
+    <h1>Diarios de Shanghai y Ningbo</h1>
+    <div class="sub">Captura cada momento en Shanghai y Ningbo</div>
+    <a class="cta" href="./browse.html">📖 Empezar a explorar</a>
+    <a class="cta g" href="#download">⬇ Descargar la app</a>
+  </div>
+
+  <div class="wrap">
+    <div class="section">
+      <h2>Últimos diarios</h2>
+      <div id="latest"><p class="empty">Cargando…</p></div>
+      <a class="btn secondary" href="./browse.html" style="margin-top:6px;">Ver todos los diarios</a>
+    </div>
+
+    <div class="section">
+      <h2>Qué es</h2>
+      <p>Una app de diario cálida y sencilla — lee diarios, comenta, añade favoritos y escucha los dialectos de Shanghai / Ningbo. Con historias reales sobre <strong>coches eléctricos</strong> (NIO ES9, BYD, XPeng, Zeekr, Li Auto) y <strong>móviles chinos</strong> (Huawei, Xiaomi, OPPO, vivo, Honor), además de la vida en Shanghai y Ningbo.</p>
+    </div>
+
+    <div class="section" id="download">
+      <h2>Descargar</h2>
+      <div class="btnrow">
+        <a class="btn" href="../diary-v1.0.0.apk" download>📥 <span>Android (diario · 53.8MB)</span></a>
+        <span class="btn secondary" style="opacity:.7;">🍎 <span>iOS (pronto)</span></span>
+      </div>
+      <p class="note">Android: permite «Instalar desde fuentes desconocidas». iOS: enlace TestFlight pronto.</p>
+    </div>
+
+    <div class="section">
+      <h2>Capturas de pantalla</h2>
+      <div class="shots">
+        <img src="../shot_home.png" alt="Inicio">
+        <img src="../shot_detail2.png" alt="Detalles y comentarios">
+        <img src="../shot_message.png" alt="Mensajes">
+      </div>
+    </div>
+
+    <p class="note" style="text-align:center; margin-top:8px;">Diarios de Shanghai y Ningbo · v1.0.0</p>
+  </div>
+
+  <script>
+    const SUPABASE_URL = "https://elrsrrvvuhfbkmxnvtod.supabase.co";
+    const SUPABASE_ANON = "sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    function esc(s){ return String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    async function loadLatest(){
+      const el = document.getElementById('latest');
+      try{
+        const { data } = await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false}).limit(3);
+        if(!data || !data.length){ el.innerHTML='<p class="empty">Aún no hay diarios.</p>'; return; }
+        el.innerHTML = data.map(d=>{
+          const first = (d.blocks||[]).find(b=>b.type==='text');
+          const prev = first ? String(first.data).slice(0,60) : '';
+          const dt = (d.created_at||'').slice(0,16).replace('T',' ');
+          return '<a class="card" href="./browse.html?d='+d.id+'"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></a>';
+        }).join('');
+      }catch(e){ el.innerHTML='<p class="empty">Error al cargar: '+esc(e.message)+'</p>'; }
+    }
+    document.addEventListener('DOMContentLoaded', loadLatest);
+  </script>
+</body>
+</html>

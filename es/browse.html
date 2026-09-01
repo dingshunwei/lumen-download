@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diarios de Shanghai y Ningbo · Explorar | Browse Diaries (Español)</title>
+  <meta name="description" content="Explora los diarios de Shanghai y Ningbo: NIO ES9 y móviles chinos, con audio de los dialectos de Shanghai/Ningbo. Browse Shanghai &amp; Ningbo diaries en español.">
+  <meta name="keywords" content="diario, Shanghai, Ningbo, NIO ES9, coches chinos, móviles, dialecto, diarios">
+  <link rel="canonical" href="https://sldiary.com/es/browse.html">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    :root{
+      --brand:#ff6a1a; --brand-deep:#f25c08; --brand-soft:#ffe9d9;
+      --bg:#faf6f0; --card:#fff; --ink:#241a12; --ink-soft:#6b6055; --ink-faint:#a79c8e;
+      --line:#efe3d5; --line-2:#f6eee1; --radius:16px;
+      --shadow:0 8px 22px rgba(130,72,20,.08);
+    }
+    * { box-sizing:border-box; }
+    body { font-family:-apple-system,"Segoe UI",Tahoma,"PingFang SC","Microsoft YaHei",Arial,sans-serif; margin:0; background:var(--bg); color:var(--ink); line-height:1.7; text-align:left; -webkit-font-smoothing:antialiased; }
+
+    header { background:rgba(250,246,240,.88); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-2); color:var(--ink); padding:12px 16px; position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between; }
+    header .l { display:flex; align-items:center; gap:8px; flex:1 1 auto; min-width:0; }
+    header .title { font-size:19px; font-weight:800; letter-spacing:.4px; cursor:pointer; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    header .right { display:flex; gap:6px; align-items:center; flex:none; }
+    header .ic { background:none; border:none; color:var(--ink-soft); font-size:19px; cursor:pointer; padding:6px 8px; border-radius:8px; transition:background .2s,color .2s; width:34px; height:34px; display:flex; align-items:center; justify-content:center; flex:none; }
+    header .ic:hover { background:var(--brand-soft); color:var(--brand); }
+    header .filter { background:var(--card); color:var(--brand); border:1px solid var(--brand); padding:7px 14px; border-radius:16px; font-size:13px; font-weight:700; cursor:pointer; transition:background .2s,color .2s; min-width:110px; text-align:center; white-space:nowrap; flex:none; }
+    header .filter:hover { background:var(--brand); color:#fff; }
+
+    .wrap { max-width:760px; margin:0 auto; padding:16px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; box-shadow:var(--shadow); display:flex; justify-content:space-between; align-items:center; cursor:pointer; gap:12px; transition:transform .2s,box-shadow .2s,border-color .2s; }
+    .card:hover { transform:translateY(-2px); border-color:#ffc7a1; }
+    .card h3 { margin:0 0 4px; font-size:17px; font-weight:700; }
+    .card .meta { font-size:13px; color:var(--ink-faint); }
+    .card .prev { font-size:13px; color:var(--ink-soft); margin-top:2px; white-space:pre-line; }
+    .card .fav { font-size:18px; flex:none; }
+    .cardthumb { width:66px; height:66px; border-radius:12px; object-fit:cover; background:var(--line-2); flex:none; }
+    .cardbody { flex:1; min-width:0; }
+    .blocks img { max-width:100%; border-radius:12px; margin:8px 0; }
+    .blocks video { max-width:100%; border-radius:12px; margin:8px 0; }
+    .blocks audio { width:100%; margin:6px 0; }
+    .blocks p { margin:8px 0; color:var(--ink-soft); white-space:pre-line; }
+    .blocks .langtag { font-size:12px; background:var(--brand-soft); color:var(--brand); padding:2px 8px; border-radius:6px; margin-left:6px; display:inline-block; }
+    .hd { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+    .hd h2 { margin:0; font-size:22px; flex:1; font-weight:800; }
+    .hd .favbtn { background:none; border:none; font-size:24px; cursor:pointer; }
+
+    .cmt { border-top:1px solid var(--line-2); padding:10px 0; }
+    .cmt .author { color:var(--brand); font-size:12px; font-weight:700; margin-right:4px; }
+    .cmt .me { color:var(--brand); font-size:12px; margin-right:4px; }
+    .cmt audio { width:100%; margin-top:4px; }
+    .cmtnone { color:var(--ink-faint); font-size:14px; padding:6px 0; }
+    .del { border:none; background:none; color:var(--ink-faint); font-size:12px; cursor:pointer; }
+
+    .inputbar { display:flex; gap:8px; align-items:center; border-top:1px solid var(--line-2); padding-top:12px; margin-top:8px; }
+    .inputbar input { flex:1; padding:11px; border:1px solid var(--line); border-radius:22px; font-size:15px; background:var(--card); color:var(--ink); }
+    .inputbar input:focus { outline:none; border-color:var(--brand); }
+    .inputbar .mic { width:44px; height:44px; border-radius:50%; border:none; background:var(--brand); color:#fff; font-size:20px; cursor:pointer; flex:none; }
+    .inputbar .mic:hover { background:var(--brand-deep); }
+    .inputbar .send { padding:0 18px; height:44px; border:none; border-radius:22px; background:var(--brand); color:#fff; font-size:15px; cursor:pointer; flex:none; }
+    .inputbar .send:hover { background:var(--brand-deep); }
+
+    .msgbox { margin-top:16px; background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); }
+    .msgbox strong { font-size:16px; }
+    .msgbox .inputbar { border:none; padding-top:8px; }
+    .empty { color:var(--ink-faint); text-align:center; padding:24px 0; }
+    .toast { position:fixed; left:50%; bottom:24px; transform:translateX(-50%); background:#333; color:#fff; padding:10px 16px; border-radius:8px; font-size:14px; opacity:0; transition:opacity .3s; z-index:99; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="l">
+      <button class="ic" id="backBtn" style="display:none" title="Atrás" onclick="goBack()">&#8592;</button>
+      <span class="title" id="headerTitle" onclick="location.href='./index.html'">Diarios de Shanghai y Ningbo</span>
+    </div>
+    <div class="right">
+      <button class="ic" title="Inicio" onclick="location.href='./index.html'">&#127968;</button>
+      <button class="filter" id="filterBtn">Solo favoritos</button>
+      <button class="ic" title="Mensaje" onclick="goMessage()">&#9993;</button>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div id="list"><div class="empty" id="loading">Cargando…</div></div>
+    <div id="detail" style="display:none"></div>
+    <div class="msgbox" id="msgbox">
+      <strong id="msglabel">Mensaje al autor</strong>
+      <div class="inputbar">
+        <input id="msgText" placeholder="Escribe al autor…">
+        <button class="send" id="msgsend" onclick="sendMessage()">Enviar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const SUPABASE_URL = "https://elrsrrvvuhfbkmxnvtod.supabase.co";
+    const SUPABASE_ANON = "sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    let ONLY_FAV = false;
+    let FAVS = new Set();
+    let RECORDER = null, RECORDING = false, REC_BITS = [];
+    const DEV = deviceId();
+
+    function deviceId(){ let id=localStorage.getItem('diary_dev_id'); if(!id){ id='web-'+Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem('diary_dev_id',id); } return id; }
+    function toast(m){ const e=document.getElementById('toast'); e.textContent=m; e.style.opacity=1; setTimeout(function(){e.style.opacity=0;},1800); }
+    function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+    function langText(l){ return {sh:'Dialecto de Shanghai',nb:'Dialecto de Ningbo',en:'Inglés',zh:'Chino'}[l]||''; }
+    function pauseOtherAudio(el){ document.querySelectorAll('audio').forEach(function(a){ if(a!==el && !a.paused) a.pause(); }); document.querySelectorAll('video').forEach(function(v){ if(v!==el && !v.paused) v.pause(); }); }
+
+    function setFilter(){ const b=document.getElementById('filterBtn'); b.textContent = ONLY_FAV ? 'Todos' : 'Solo favoritos'; }
+
+    async function loadDiaries(){
+      const el=document.getElementById('list');
+      try{
+        const {data}=await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false});
+        if(!data||!data.length){ el.innerHTML='<div class="empty">Aún no hay diarios</div>'; return; }
+        el.innerHTML='';
+        data.forEach(function(d){
+          if(ONLY_FAV && !FAVS.has(d.id)) return;
+          const first=(d.blocks||[]).find(function(b){return b.type==='text';});
+          const prev=first?String(first.data).slice(0,50):'';
+          const dt=(d.created_at||'').slice(0,16).replace('T',' ');
+          let thumb='';
+          const imgB=(d.blocks||[]).find(function(b){return b.type==='image';});
+          const vidB=(d.blocks||[]).find(function(b){return b.type==='video';});
+          if(imgB) thumb='<img class="cardthumb" src="'+esc(imgB.data)+'">';
+          else if(vidB) thumb='<video class="cardthumb" src="'+esc(vidB.data)+'" preload="metadata" muted playsinline></video>';
+          const c=document.createElement('div'); c.className='card';
+          c.innerHTML=''+thumb+'<div class="cardbody"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></div><span class="fav">'+(FAVS.has(d.id)?'&#9829;':'&#9825;')+'</span>';
+          c.onclick=function(){ openDiary(d.id); }; el.appendChild(c);
+        });
+        if(!el.children.length) el.innerHTML='<div class="empty">'+(ONLY_FAV?'No hay favoritos':'Aún no hay diarios')+'</div>';
+      }catch(e){ el.innerHTML='<div class="empty">Error al cargar: '+esc(e.message)+'</div>'; }
+    }
+    document.getElementById('loading').textContent = 'Cargando…';
+
+    async function loadFavs(){ try{ const {data}=await sb.from('favorites').select('diary_id').eq('device_id',DEV); FAVS=new Set((data||[]).map(function(x){return x.diary_id;})); }catch(e){} }
+
+    function openDiary(id){
+      document.getElementById('list').style.display='none';
+      document.getElementById('detail').style.display='block';
+      document.getElementById('backBtn').style.display='inline-flex';
+      const d=document.getElementById('detail'); d.innerHTML='<div class="empty">Cargando…</div>';
+      sb.from('diaries').select('id,title,blocks,created_at').eq('id',id).single().then(function(r){
+        if(r.error){ d.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>'; return; }
+        const data=r.data; const fav=FAVS.has(id);
+        let h='<div class="hd"><h2>'+esc(data.title)+'</h2><button class="favbtn" id="favbtn" onclick="toggleFav('+id+')">'+(fav?'&#9829;':'&#9825;')+'</button></div>';
+        h+='<div class="meta" style="font-size:13px;color:#9a9a9a;margin-bottom:6px">'+String(data.created_at||'').slice(0,16).replace('T',' ')+'</div>';
+        h+='<div class="blocks">';
+        (data.blocks||[]).forEach(function(b){
+          if(b.type==='text') h+='<p>'+esc(b.data)+'</p>';
+          else if(b.type==='image') h+='<img src="'+esc(b.data)+'" alt="img">';
+          else if(b.type==='video') h+='<video controls controlsList="nodownload" oncontextmenu="return false" src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></video>';
+          else if(b.type==='voice'){ const lt=langText(b.lang); h+=(lt?'<span class="langtag">'+lt+'</span>':'')+'<audio controls controlsList="nodownload" src="'+esc(b.data)+'" onplay="pauseOtherAudio(this)"></audio>'; }
+        });
+        h+='</div><div id="cmts"></div>';
+        h+='<div class="inputbar"><input id="cmtText" placeholder="Escribe un comentario…"><button class="mic" id="micbtn" onclick="toggleRecord('+id+')">&#127908;</button><button class="send" onclick="postComment('+id+')">Enviar</button></div>';
+        d.innerHTML=h; loadComments(id);
+      });
+    }
+
+    async function loadComments(id){
+      const box=document.getElementById('cmts');
+      try{
+        const {data}=await sb.from('comments').select('id,type,text,audio,device_id,is_admin,created_at').eq('diary_id',id).order('created_at',{ascending:true});
+        if(!data||!data.length){ box.innerHTML='<div class="cmtnone">No hay comentarios todavía</div>'; return; }
+        box.innerHTML=data.map(function(c){
+          const me=c.device_id===DEV, admin=c.is_admin;
+          const tag=admin?'<span class="author">Autor</span>':(me?'<span class="me">Yo</span>':'');
+          const del=(me||admin)?' <button class="del" onclick="delComment('+id+','+c.id+')">Eliminar</button>':'';
+          let body='';
+          if(c.type==='voice'&&c.audio) body='<audio controls controlsList="nodownload" src="'+esc(c.audio)+'" onplay="pauseOtherAudio(this)"></audio>';
+          else body=esc(c.text||'');
+          return '<div class="cmt">'+tag+body+'<div style="font-size:12px;color:#bbb">'+String(c.created_at||'').slice(0,16).replace('T',' ')+'</div>'+del+'</div>';
+        }).join('');
+      }catch(e){ box.innerHTML=''; }
+    }
+
+    async function postComment(id){
+      const txt=document.getElementById('cmtText').value.trim();
+      if(!txt) return;
+      try{ await sb.from('comments').insert({diary_id:id,type:'text',text:txt,device_id:DEV,is_admin:false}); document.getElementById('cmtText').value=''; toast('Comentario publicado'); loadComments(id); }catch(e){ toast('Error: '+e.message); }
+    }
+    async function delComment(diaryId,cid){
+      try{ await sb.from('comments').delete().eq('id',cid).eq('device_id',DEV); loadComments(diaryId); toast('Eliminado'); }catch(e){ toast('Error: '+e.message); }
+    }
+    async function toggleFav(id){
+      try{
+        if(FAVS.has(id)){ await sb.from('favorites').delete().eq('device_id',DEV).eq('diary_id',id); FAVS.delete(id); }
+        else { await sb.from('favorites').insert({device_id:DEV,diary_id:id}); FAVS.add(id); }
+        const b=document.getElementById('favbtn'); if(b) b.innerHTML=FAVS.has(id)?'&#9829;':'&#9825;';
+        toast(FAVS.has(id)?'Añadido a favoritos':'Eliminado de favoritos');
+      }catch(e){ toast('Error: '+e.message); }
+    }
+    async function toggleRecord(id){
+      const btn=document.getElementById('micbtn');
+      if(!RECORDING){
+        try{
+          const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+          const mime=['audio/webm;codecs=opus','audio/webm','audio/ogg;codecs=opus'].find(function(m){return MediaRecorder.isTypeSupported(m);});
+          RECORDER=new MediaRecorder(stream, mime?{mimeType:mime}:undefined);
+          REC_BITS=[];
+          RECORDER.ondataavailable=function(e){ if(e.data&&e.data.size) REC_BITS.push(e.data); };
+          RECORDER.onstop=async function(){
+            stream.getTracks().forEach(function(tr){tr.stop();});
+            if(!REC_BITS.length){ toast('Demasiado corto'); return; }
+            toast('Subiendo…');
+            const blob=new Blob(REC_BITS,{type:RECORDER.mimeType||'audio/webm'});
+            const ext=(RECORDER.mimeType||'').indexOf('ogg')>=0?'ogg':'webm';
+            const path='audio/'+Date.now()+'_'+Math.random().toString(36).slice(2,6)+'.'+ext;
+            try{
+              await sb.storage.from('media').upload(path, blob, {contentType:blob.type, upsert:false});
+              const url=sb.storage.from('media').getPublicUrl(path).data.publicUrl;
+              await sb.from('comments').insert({diary_id:id,type:'voice',audio:url,device_id:DEV,is_admin:false});
+              toast('Comentario de voz publicado'); loadComments(id);
+            }catch(e){ toast('Error al subir: '+e.message); }
+          };
+          RECORDER.start(); RECORDING=true; btn.textContent='&#128308;'; toast('Grabando…');
+        }catch(e){ toast('Se requiere permiso de micrófono'); }
+      }else{ RECORDER.stop(); RECORDING=false; if(btn) btn.innerHTML='&#127908;'; }
+    }
+    async function sendMessage(){
+      const txt=document.getElementById('msgText').value.trim(); if(!txt) return;
+      try{ await sb.from('messages').insert({device_id:DEV,text:txt}); document.getElementById('msgText').value=''; toast('Enviado'); }catch(e){ toast('Error: '+e.message); }
+    }
+    function goMessage(){ var box=document.getElementById('msgbox'); if(box) box.scrollIntoView({behavior:'smooth'}); var inp=document.getElementById('msgText'); if(inp) setTimeout(function(){inp.focus();},300); }
+    function showList(){
+      document.getElementById('detail').style.display='none';
+      document.getElementById('list').style.display='block';
+      document.getElementById('backBtn').style.display='none';
+      if(history.replaceState) history.replaceState(null,'',location.pathname);
+      loadDiaries();
+    }
+    function goBack(){ showList(); }
+
+    document.addEventListener('DOMContentLoaded', async function(){
+      await loadFavs();
+      const id=new URLSearchParams(location.search).get('d');
+      if(id){ openDiary(parseInt(id)); } else { loadDiaries(); }
+    });
+    document.getElementById('filterBtn').addEventListener('click',function(){ ONLY_FAV=!ONLY_FAV; setFilter(); loadDiaries(); });
+  </script>
+</body>
+</html>
