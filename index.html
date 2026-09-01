@@ -116,7 +116,7 @@
   <div class="wrap">
     <div class="section">
       <h2><span class="zh">最新日记</span><span class="en">Latest diaries</span></h2>
-      <div id="latest"><p class="empty">加载中…</p></div>
+      <div id="latest"><p class="empty"><span class="zh">加载中…</span><span class="en">Loading…</span></p></div>
       <a class="btn secondary" href="./browse.html" style="margin-top:6px;">👉 <span class="zh">查看全部日记</span><span class="en">View all diaries</span></a>
     </div>
 
@@ -151,18 +151,19 @@
     const SUPABASE_ANON = "sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
     function esc(s){ return String(s||'').replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+    function t(zh,en){ return document.documentElement.getAttribute('data-lang')==='en' ? en : zh; }
     async function loadLatest(){
       const el = document.getElementById('latest');
       try{
         const { data } = await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false}).limit(3);
-        if(!data || !data.length){ el.innerHTML='<p class="empty">还没有日记，等作者发布吧</p>'; return; }
+        if(!data || !data.length){ el.innerHTML='<p class="empty">'+t('还没有日记，等作者发布吧','No diaries yet.')+'</p>'; return; }
         el.innerHTML = data.map(d=>{
           const first = (d.blocks||[]).find(b=>b.type==='text');
           const prev = first ? first.data.slice(0,60) : '';
           const dt = (d.created_at||'').slice(0,16).replace('T',' ');
           return '<a class="card" href="./browse.html?d='+d.id+'"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></a>';
         }).join('');
-      }catch(e){ el.innerHTML='<p class="empty">加载失败：'+esc(e.message)+'</p>'; }
+      }catch(e){ el.innerHTML='<p class="empty">'+t('加载失败：','Load failed: ')+esc(e.message)+'</p>'; }
     }
     var btn = document.getElementById('langbtn');
     btn.addEventListener('click', function(){
@@ -171,6 +172,7 @@
       document.documentElement.setAttribute('data-lang',lang);
       document.documentElement.setAttribute('lang',lang);
       document.title = lang==='zh' ? '上海宁波日记 · 下载' : 'Shanghai/Ningbo Diary · Download';
+      loadLatest();
     });
     document.addEventListener('DOMContentLoaded', loadLatest);
   </script>
