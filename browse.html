@@ -91,6 +91,7 @@
 <body>
   <header>
     <div class="l">
+      <button class="ic" id="backBtn" style="display:none" title="Back" onclick="goBack()">&#8592;</button>
       <span class="title" id="headerTitle" onclick="location.href='./index.html'">Sunlight Diary</span>
     </div>
     <div class="right">
@@ -175,6 +176,7 @@
     function openDiary(id){
       document.getElementById('list').style.display='none';
       document.getElementById('detail').style.display='block';
+      document.getElementById('backBtn').style.display='inline-flex';
       const d=document.getElementById('detail'); d.innerHTML='<div class="empty">'+t('加载中...','Loading...')+'</div>';
       sb.from('diaries').select('id,title,blocks,created_at').eq('id',id).single().then(function(r){
         if(r.error){ d.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>'; return; }
@@ -262,8 +264,11 @@
     function showList(){
       document.getElementById('detail').style.display='none';
       document.getElementById('list').style.display='block';
+      document.getElementById('backBtn').style.display='none';
+      if(history.replaceState) history.replaceState(null,'',location.pathname);
       loadDiaries();
     }
+    function goBack(){ showList(); }
 
     document.addEventListener('DOMContentLoaded', async function(){
       applyLang();
