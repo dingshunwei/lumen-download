@@ -30,8 +30,8 @@
 
     /* topbar */
     .topbar { background:rgba(250,246,240,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line-2); padding:12px 18px; display:flex; justify-content:space-between; align-items:center; position:sticky; top:0; z-index:10; }
-    .topbar .brand { font-weight:700; font-size:17px; color:var(--ink); letter-spacing:.5px; }
-    .langbtn { background:var(--brand); color:#fff; border:none; padding:8px 16px; border-radius:999px; cursor:pointer; font-size:13.5px; font-weight:600; transition:transform .2s,background .2s; }
+    .topbar .brand { font-weight:700; font-size:17px; color:var(--ink); letter-spacing:.5px; flex:1 1 auto; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .langbtn { background:var(--brand); color:#fff; border:none; padding:8px 16px; border-radius:999px; cursor:pointer; font-size:13.5px; font-weight:600; transition:transform .2s,background .2s; min-width:130px; text-align:center; white-space:nowrap; flex:none; }
     .langbtn:hover { background:var(--brand-deep); transform:translateY(-1px); }
 
     /* hero */
