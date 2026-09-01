@@ -139,7 +139,7 @@
     function deviceId(){ let id=localStorage.getItem('diary_dev_id'); if(!id){ id='web-'+Math.random().toString(36).slice(2)+Date.now().toString(36); localStorage.setItem('diary_dev_id',id); } return id; }
     function toast(m){ const e=document.getElementById('toast'); e.textContent=m; e.style.opacity=1; setTimeout(function(){e.style.opacity=0;},1800); }
     function esc(s){ return String(s||'').replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
-    function langText(l){ return {sh:'上海话',nb:'宁波话',en:'英语',zh:'中文'}[l]||''; }
+    function langText(l){ return {sh:t('上海话','Shanghainese'),nb:t('宁波话','Ningbo'),en:t('英语','English'),zh:t('中文','Mandarin')}[l]||''; }
     function pauseOtherAudio(el){ document.querySelectorAll('audio').forEach(function(a){ if(a!==el && !a.paused) a.pause(); }); document.querySelectorAll('video').forEach(function(v){ if(v!==el && !v.paused) v.pause(); }); }
 
     function setFilter(){ const b=document.getElementById('filterBtn'); b.textContent = ONLY_FAV ? t('全部','All') : t('只看收藏','Favorites only'); }
