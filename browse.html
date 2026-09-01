@@ -174,6 +174,9 @@
     async function loadFavs(){ try{ const {data}=await sb.from('favorites').select('diary_id').eq('device_id',DEV); FAVS=new Set((data||[]).map(function(x){return x.diary_id;})); }catch(e){} }
 
     function openDiary(id){
+      // 记录历史，便于返回键回到上一页
+      const cur=new URLSearchParams(location.search).get('d');
+      if(!(cur&&parseInt(cur)===id)) history.pushState({view:'diary',id:id},'', '?d='+id);
       document.getElementById('list').style.display='none';
       document.getElementById('detail').style.display='block';
       document.getElementById('backBtn').style.display='inline-flex';
@@ -268,7 +271,16 @@
       if(history.replaceState) history.replaceState(null,'',location.pathname);
       loadDiaries();
     }
-    function goBack(){ showList(); }
+    function goBack(){
+      if(history.state && history.state.view==='diary'){ history.back(); }
+      else if(history.length>1){ history.back(); }
+      else { showList(); }
+    }
+    window.addEventListener('popstate', function(){
+      const id=new URLSearchParams(location.search).get('d');
+      if(id){ return; } // 仍在详情视图，保持
+      showList();
+    });
 
     document.addEventListener('DOMContentLoaded', async function(){
       applyLang();
