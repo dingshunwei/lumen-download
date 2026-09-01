@@ -62,6 +62,8 @@
     .btn { display:block; text-align:center; background:var(--brand); color:#fff; text-decoration:none; padding:14px 20px; border-radius:12px; font-size:17px; font-weight:600; margin:12px 0; transition:background .2s,transform .2s; }
     .btn:hover { background:var(--brand-deep); transform:translateY(-1px); }
     .btn.secondary { background:var(--card); color:var(--brand); border:2px solid var(--brand); }
+    .btnrow { display:flex; gap:12px; margin:12px 0; }
+    .btnrow .btn { flex:1; margin:0; }
 
     /* screenshots */
     .shots { display:flex; gap:10px; overflow-x:auto; padding:6px 0; }
@@ -125,8 +127,11 @@
 
     <div class="section" id="download">
       <h2><span class="zh">下载安装</span><span class="en">Download</span></h2>
-      <p class="note"><span class="zh">安卓手机专用。安装后需允许"安装未知来源应用"。</span><span class="en">For Android. Allow "install from unknown sources" when prompted.</span></p>
-      <a class="btn" href="./diary-v1.0.0.apk" download>📥 <span class="zh">下载 App（diary-v1.0.0.apk · 53.7MB）</span><span class="en">Download App (diary-v1.0.0.apk · 53.7MB)</span></a>
+      <div class="btnrow">
+        <a class="btn" href="./diary-v1.0.0.apk" download>📥 <span class="zh">安卓版（diary · 53.7MB）</span><span class="en">Android (diary · 53.7MB)</span></a>
+        <span class="btn secondary" style="opacity:.7;">🍎 <span class="zh">iOS 版（即将上线）</span><span class="en">iOS (coming soon)</span></span>
+      </div>
+      <p class="note"><span class="zh">安卓：安装后请在系统设置中允许"安装未知来源应用"。iOS：TestFlight 测试链接即将上线。</span><span class="en">Android: allow "install from unknown sources" when prompted. iOS: TestFlight link coming soon.</span></p>
     </div>
 
     <div class="section">
