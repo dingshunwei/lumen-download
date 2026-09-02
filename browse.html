@@ -124,7 +124,7 @@
     let FAVS = new Set();
     let RECORDER = null, RECORDING = false, REC_BITS = [];
     const DEV = deviceId();
-    let LANG = localStorage.getItem('lang') || document.documentElement.getAttribute('data-lang') || 'en';
+    let LANG = new URLSearchParams(location.search).get('lang') || localStorage.getItem('lang') || document.documentElement.getAttribute('data-lang') || 'en';
 
     function t(zh,en){ return LANG==='en' ? en : zh; }
     function applyLang(){
