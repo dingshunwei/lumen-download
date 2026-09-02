@@ -48,7 +48,10 @@
     .shots img { height:480px; width:240px; object-fit:cover; border-radius:12px; border:1px solid var(--line); }
     .note { font-size:13px; color:var(--ink-faint); }
     .empty { color:var(--ink-faint); text-align:center; padding:24px 0; }
-  </style>
+  
+.hero .logo-row{display:flex;align-items:center;justify-content:center;gap:14px;position:relative;z-index:2;flex-wrap:wrap;}
+.hero .cta.side{padding:9px 16px;font-size:13px;box-shadow:none;}
+</style>
 </head>
 <body>
   <div class="topbar">
@@ -56,13 +59,14 @@
   </div>
 
   <div class="hero">
-    <div class="logo">📔</div>
+    <div class="logo-row">
+      <a class="cta g side" href="https://chinacar.bid" target="_blank">🚗 <span class="zh">中国车</span><span class="en">China Car</span></a>
+      <div class="logo">📔</div>
+      <a class="cta g side" href="https://chinamobile.uk" target="_blank">📱 <span class="zh">中国手机</span><span class="en">China Mobile</span></a>
+    </div>
     <h1>Дневники Шанхая и Нинбо</h1>
-    <div class="sub">Запечатлей каждый момент в Шанхае и Нинбо</div><a class="cta g" href="https://chinacar.bid" target="_blank">🚗 <span class="zh">中国车网站</span><span class="en">China Car</span></a>
-    
-    <a class="cta" href="./browse.html">📖 Начать просмотр</a>
+    <div class="sub">Запечатлей каждый момент в Шанхае и Нинбо</div><a class="cta" href="./browse.html">📖 Начать просмотр</a>
     <a class="cta g" href="#download">⬇ Скачать приложение</a>
-    <a class="cta g" href="https://chinamobile.uk" target="_blank">📱 <span class="zh">中国手机网站</span><span class="en">China Mobile</span></a>
   </div>
 
   <div class="wrap">
