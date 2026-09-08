@@ -192,6 +192,7 @@
       // 记录历史，便于返回键回到上一页
       const cur=new URLSearchParams(location.search).get('d');
       if(!(cur&&parseInt(cur)===id)) history.pushState({view:'diary',id:id},'', '?d='+id);
+      document.querySelector('.seo').style.display='none';
       document.getElementById('list').style.display='none';
       document.getElementById('detail').style.display='block';
       document.getElementById('backBtn').style.display='inline-flex';
@@ -282,6 +283,7 @@
       document.getElementById('detail').style.display='none';
       document.getElementById('list').style.display='block';
       document.getElementById('backBtn').style.display='none';
+      document.querySelector('.seo').style.display='';
       if(history.replaceState) history.replaceState(null,'',location.pathname);
       loadDiaries();
     }
