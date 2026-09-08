@@ -28,10 +28,8 @@ header .filter{background:var(--card);color:var(--brand);border:1px solid var(--
 .empty{color:var(--ink-faint);text-align:center;padding:24px 0;}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#333;color:#fff;padding:10px 16px;border-radius:8px;font-size:14px;opacity:0;transition:opacity .3s;z-index:99;}
 </style></head><body>
 <header><div class="l"><button class="ic" id="backBtn" style="display:none" title="واپس" onclick="goBack()">&#8592;</button><span class="title" id="headerTitle" onclick="location.href='./index.html'">شنگھائی اور ننگبو کی ڈائریاں</span></div><div class="right"><button class="ic" title="ہوم" onclick="location.href='./index.html'">&#127968;</button><button class="filter" id="filterBtn">صرف پسندیدہ</button><button class="ic" title="msg" onclick="goMessage()">&#9993;</button></div></header>
-<div class="wrap">    <div class="seo" style="color:#6a665e;line-height:1.7;margin-bottom:18px;font-size:15px">
-      <p>Browse authentic Shanghai &amp; Ningbo diaries about Chinese electric vehicles and smartphones — NIO ES9, BYD, XPeng, Zeekr, Li Auto; Huawei, Xiaomi, OPPO, vivo, Honor. Real user notes, reviews and commentary, including Shanghai and Ningbo dialect voice recordings. Available in both Chinese and English. Click any card below to read the full diary.</p>
-    </div>
-    <div id="list"><div class="empty" id="loading">لوڈ ہو رہا ہے…</div></div><div id="detail" style="display:none"></div><div class="msgbox" id="msgbox"><strong id="msglabel">مصنف کو پیغام</strong><div class="inputbar"><input id="msgText" placeholder="مصنف کو کچھ لکھیں…"><button class="send" id="msgsend" onclick="sendMessage()">بھیجیں</button></div></div></div>
+<div class="wrap">
+<div id="list"><div class="empty" id="loading">لوڈ ہو رہا ہے…</div></div><div id="detail" style="display:none"></div><div class="msgbox" id="msgbox"><strong id="msglabel">مصنف کو پیغام</strong><div class="inputbar"><input id="msgText" placeholder="مصنف کو کچھ لکھیں…"><button class="send" id="msgsend" onclick="sendMessage()">بھیجیں</button></div></div></div>
 <div class="toast" id="toast"></div>
 <script>
 const SUPABASE_URL="https://elrsrrvvuhfbkmxnvtod.supabase.co";const SUPABASE_ANON="sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";const sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON);
