@@ -173,15 +173,31 @@
           const imgB=(d.blocks||[]).find(function(b){return b.type==='image';});
           const vidB=(d.blocks||[]).find(function(b){return b.type==='video';});
           if(imgB) thumb='<img class="cardthumb" src="'+esc(imgB.data)+'">';
-          else if(vidB) thumb='<video class="cardthumb" src="'+esc(vidB.data)+'#t=0.1" preload="metadata" muted playsinline></video>';
+          else if(vidB) thumb='<video class="cardthumb" data-vid="'+esc(vidB.data)+'" preload="none" muted playsinline></video>';
           const c=document.createElement('div'); c.className='card';
           c.innerHTML=''+thumb+'<div class="cardbody"><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></div><span class="fav">'+(FAVS.has(d.id)?'&#9829;':'&#9825;')+'</span>';
           c.onclick=function(){ openDiary(d.id); }; el.appendChild(c);
         });
         if(!el.children.length) el.innerHTML='<div class="empty">'+(ONLY_FAV?t('还没有收藏的日记','No favorited diaries yet'):t('还没有日记','No diaries yet'))+'</div>';
+        observeVideoThumbs();
       }catch(e){ el.innerHTML='<div class="empty">'+t('加载失败','Load failed')+': '+esc(e.message)+'</div>'; }
     }
     document.getElementById('loading').textContent = t('加载中...','Loading...');
+
+    // 视频卡片缩略图懒加载：滚动到可见才取首帧
+    function observeVideoThumbs(){
+      var vids=document.querySelectorAll('#list video.cardthumb');
+      if(!('IntersectionObserver' in window) || !vids.length) return;
+      var io=new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if(en.isIntersecting){ var v=en.target;
+            if(v.dataset.vid && !v.getAttribute('src')){ v.preload='metadata'; v.src=v.dataset.vid+'#t=0.1'; }
+            io.unobserve(v);
+          }
+        });
+      },{rootMargin:'120px'});
+      vids.forEach(function(v){ io.observe(v); });
+    }
 
     async function loadFavs(){ try{ const {data}=await sb.from('favorites').select('diary_id').eq('device_id',DEV); FAVS=new Set((data||[]).map(function(x){return x.diary_id;})); }catch(e){} }
 
