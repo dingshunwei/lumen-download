@@ -148,7 +148,7 @@
     async function loadDiaries(){
       const el=document.getElementById('list');
       try{
-        const {data}=await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false});
+        const {data}=await sb.from('diaries').select('id,title,blocks,created_at,ord').eq('deleted', false).order('ord',{ascending:true}).order('created_at',{ascending:false});
         if(!data||!data.length){ el.innerHTML='<div class="empty">'+t('还没有日记，等作者发布吧','No diaries yet.')+'</div>'; return; }
         el.innerHTML='';
         data.forEach(function(d){
