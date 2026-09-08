@@ -103,9 +103,6 @@
   </header>
 
   <div class="wrap">
-    <div class="seo" style="color:#6a665e;line-height:1.7;margin-bottom:18px;font-size:15px">
-      <p>Browse authentic Shanghai &amp; Ningbo diaries about Chinese electric vehicles and smartphones — NIO ES9, BYD, XPeng, Zeekr, Li Auto; Huawei, Xiaomi, OPPO, vivo, Honor. Real user notes, reviews and commentary, including Shanghai and Ningbo dialect voice recordings. Available in both Chinese and English. Click any card below to read the full diary.</p>
-    </div>
     <div id="list"><div class="empty" id="loading">Loading...</div></div>
     <div id="detail" style="display:none"></div>
     <div class="msgbox" id="msgbox">
@@ -192,7 +189,6 @@
       // 记录历史，便于返回键回到上一页
       const cur=new URLSearchParams(location.search).get('d');
       if(!(cur&&parseInt(cur)===id)) history.pushState({view:'diary',id:id},'', '?d='+id);
-      document.querySelector('.seo').style.display='none';
       document.getElementById('list').style.display='none';
       document.getElementById('detail').style.display='block';
       document.getElementById('backBtn').style.display='inline-flex';
@@ -283,7 +279,6 @@
       document.getElementById('detail').style.display='none';
       document.getElementById('list').style.display='block';
       document.getElementById('backBtn').style.display='none';
-      document.querySelector('.seo').style.display='';
       if(history.replaceState) history.replaceState(null,'',location.pathname);
       loadDiaries();
     }
