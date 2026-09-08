@@ -81,6 +81,9 @@
   </header>
 
   <div class="wrap">
+        <div class="seo" style="color:#6a665e;line-height:1.7;margin-bottom:18px;font-size:15px">
+      <p>Browse authentic Shanghai &amp; Ningbo diaries about Chinese electric vehicles and smartphones — NIO ES9, BYD, XPeng, Zeekr, Li Auto; Huawei, Xiaomi, OPPO, vivo, Honor. Real user notes, reviews and commentary, including Shanghai and Ningbo dialect voice recordings. Available in both Chinese and English. Click any card below to read the full diary.</p>
+    </div>
     <div id="list"><div class="empty" id="loading">Caricamento…</div></div>
     <div id="detail" style="display:none"></div>
     <div class="msgbox" id="msgbox">
@@ -98,6 +101,18 @@
     const SUPABASE_URL = "https://elrsrrvvuhfbkmxnvtod.supabase.co";
     const SUPABASE_ANON = "sb_publishable_XuZtEeFeJK6GtQC1RE3O6A_ZoVMcaO6";
     const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+    const PROXY = "https://api.sldiary.com";
+    async function uploadMedia(blob, folder, contentType){
+      try{
+        const authRes = await fetch(PROXY+"/auth",{method:"POST",headers:{"content-type":"application/json"},body:JSON.stringify({folder:folder,size:blob.size,deviceId:"h5",contentType:contentType})});
+        const authJ = await authRes.json();
+        const ticket = authJ && authJ.ticket; if(!ticket){ throw new Error("no ticket"); }
+        const ext = (contentType.indexOf("ogg")>=0)?"ogg":(contentType.indexOf("webm")>=0?"webm":(contentType.indexOf("mp3")>=0?"mp3":"bin"));
+        const upRes = await fetch(PROXY+"/upload",{method:"POST",headers:{"X-Ticket":ticket,"X-Folder":folder,"X-Content-Type":contentType,"X-Original-Name":"voice."+ext},body:blob});
+        const upJ = await upRes.json();
+        return (upJ && upJ.url) || null;
+      }catch(e){ return null; }
+    }
     let ONLY_FAV = false;
     let FAVS = new Set();
     let RECORDER = null, RECORDING = false, REC_BITS = [];
@@ -211,8 +226,7 @@
             const ext=(RECORDER.mimeType||'').indexOf('ogg')>=0?'ogg':'webm';
             const path='audio/'+Date.now()+'_'+Math.random().toString(36).slice(2,6)+'.'+ext;
             try{
-              await sb.storage.from('media').upload(path, blob, {contentType:blob.type, upsert:false});
-              const url=sb.storage.from('media').getPublicUrl(path).data.publicUrl;
+              const url=await uploadMedia(blob,'audio',blob.type||'audio/webm');
               await sb.from('comments').insert({diary_id:id,type:'voice',audio:url,device_id:DEV,is_admin:false});
               toast('Commento vocale pubblicato'); loadComments(id);
             }catch(e){ toast('Errore di caricamento: '+e.message); }
