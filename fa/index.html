@@ -49,4 +49,5 @@ const SUPABASE_URL="https://elrsrrvvuhfbkmxnvtod.supabase.co";const SUPABASE_ANO
 function esc(s){return String(s||'').replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 async function loadLatest(){const el=document.getElementById('latest');try{const {data}=await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false}).limit(3);if(!data||!data.length){el.innerHTML='<p class="empty">هنوز روزنامه‌ای نیست.</p>';return;}el.innerHTML=data.map(function(d){const first=(d.blocks||[]).find(function(b){return b.type==='text';});const prev=first?String(first.data).slice(0,60):'';const dt=(d.created_at||'').slice(0,16).replace('T',' ');return '<a class="card" href="./browse.html?d="+d.id+""><h3>'+esc(d.title)+'</h3><div class="prev">'+esc(prev)+'</div><div class="meta">'+dt+'</div></a>';}).join('');}catch(e){el.innerHTML='<p class="empty">خطا در بارگذاری: '+esc(e.message)+'</p>';}}
 document.addEventListener('DOMContentLoaded',loadLatest);
-</script></body></html>
+</script><!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e2b3c7ce583f47d3a5975405552140be"}'></script><!-- End Cloudflare Web Analytics -->
+</body></html>

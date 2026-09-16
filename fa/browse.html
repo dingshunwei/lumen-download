@@ -67,4 +67,5 @@ function goMessage(){var box=document.getElementById('msgbox');if(box)box.scroll
 function showList(){document.getElementById('detail').style.display='none';document.getElementById('list').style.display='block';document.getElementById('backBtn').style.display='none';if(history.replaceState)history.replaceState(null,'',location.pathname);loadDiaries();}function goBack(){showList();}
 document.addEventListener('DOMContentLoaded',async function(){await loadFavs();const id=new URLSearchParams(location.search).get('d');if(id){openDiary(parseInt(id));}else{loadDiaries();}});
 document.getElementById('filterBtn').addEventListener('click',function(){ONLY_FAV=!ONLY_FAV;setFilter();loadDiaries();});
-</script></body></html>
+</script><!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "e2b3c7ce583f47d3a5975405552140be"}'></script><!-- End Cloudflare Web Analytics -->
+</body></html>
