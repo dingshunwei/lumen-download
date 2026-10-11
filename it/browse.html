@@ -146,7 +146,7 @@
     async function loadDiaries(){
       const el=document.getElementById('list');
       try{
-        const {data}=await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false});
+        const {data}=await sb.from('diaries').select('id,title,blocks,created_at').eq('deleted', false).order('ord',{ascending:true}).order('created_at',{ascending:false});
         if(!data||!data.length){ el.innerHTML='<div class="empty">Nessun diario per ora</div>'; return; }
         el.innerHTML='';
         data.forEach(function(d){
@@ -183,7 +183,7 @@
       document.getElementById('detail').style.display='block';
       document.getElementById('backBtn').style.display='inline-flex';
       const d=document.getElementById('detail'); d.innerHTML='<div class="empty">Caricamento…</div>';
-      sb.from('diaries').select('id,title,blocks,created_at').eq('id',id).single().then(function(r){
+      sb.from('diaries').select('id,title,blocks,created_at').eq('deleted', false).eq('id',id).single().then(function(r){
         if(r.error){ d.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>'; return; }
         const data=r.data; const fav=FAVS.has(id);
         let h='<div class="hd"><h2>'+esc(data.title)+'</h2><button class="favbtn" id="favbtn" onclick="toggleFav('+id+')">'+(fav?'&#9829;':'&#9825;')+'</button></div>';

@@ -130,7 +130,7 @@
     async function loadLatest(){
       const el = document.getElementById('latest');
       try{
-        const { data } = await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false}).limit(3);
+        const { data } = await sb.from('diaries').select('id,title,blocks,created_at').eq('deleted', false).order('ord',{ascending:true}).order('created_at',{ascending:false}).limit(3);
         if(!data || !data.length){ el.innerHTML='<p class="empty">Aún no hay diarios.</p>'; return; }
         el.innerHTML = data.map(d=>{
           const first = (d.blocks||[]).find(b=>b.type==='text');

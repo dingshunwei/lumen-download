@@ -144,7 +144,7 @@
     async function loadDiaries(){
       const el=document.getElementById('list');
       try{
-        const {data}=await sb.from('diaries').select('id,title,blocks,created_at').order('created_at',{ascending:false});
+        const {data}=await sb.from('diaries').select('id,title,blocks,created_at').eq('deleted', false).order('ord',{ascending:true}).order('created_at',{ascending:false});
         if(!data||!data.length){ el.innerHTML='<div class="empty">अभी कोई डायरी नहीं, लेखक प्रकाशित करेगा</div>'; return; }
         el.innerHTML='';
         data.forEach(function(d){
@@ -179,7 +179,7 @@
       document.getElementById('list').style.display='none';
       document.getElementById('detail').style.display='block';
       const d=document.getElementById('detail'); d.innerHTML='<div class="empty">लोड हो रहा है…</div>';
-      sb.from('diaries').select('id,title,blocks,created_at').eq('id',id).single().then(function(r){
+      sb.from('diaries').select('id,title,blocks,created_at').eq('deleted', false).eq('id',id).single().then(function(r){
         if(r.error){ d.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>'; return; }
         const data=r.data; const fav=FAVS.has(id);
         let h='<div class="hd"><h2>'+esc(data.title)+'</h2><button class="favbtn" id="favbtn" onclick="toggleFav('+id+')">'+(fav?'&#9829;':'&#9825;')+'</button></div>';

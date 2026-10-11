@@ -229,7 +229,7 @@
       document.getElementById('detail').style.display='block';
       document.getElementById('backBtn').style.display='inline-flex';
       const d=document.getElementById('detail'); d.innerHTML='<div class="empty">'+t('加载中...','Loading...')+'</div>';
-      sb.from('diaries').select('id,title,blocks,created_at').eq('id',id).single().then(function(r){
+      sb.from('diaries').select('id,title,blocks,created_at').eq('deleted', false).eq('id',id).single().then(function(r){
         if(r.error){ d.innerHTML='<div class="empty">'+esc(r.error.message)+'</div>'; return; }
         const data=r.data; const fav=FAVS.has(id);
         let h='<div class="hd"><h2>'+esc(data.title)+'</h2><button class="favbtn" id="favbtn" onclick="toggleFav('+id+')">'+(fav?'&#9829;':'&#9825;')+'</button></div>';
